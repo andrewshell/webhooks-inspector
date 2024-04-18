@@ -4,7 +4,7 @@ function Header() {
   return (
     <header className='flex items-center justify-between border-b border-neutral-200 pb-2'>
       <Link to="/">
-        <h1 className='bg-gradient-to-r from-violet-500 to-purple-400 bg-cli-text pb-1 text-4xl font-extrabold italic tracking-wider text-transparent'>
+        <h1 className='bg-gradient-to-r from-violet-500 to-purple-400 bg-clip-text pb-1 text-4xl font-extrabold italic tracking-wider text-transparent'>
           Webhooks Inspector
         </h1>
       </Link>
