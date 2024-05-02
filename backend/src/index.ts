@@ -1,7 +1,6 @@
 import mongoose from 'mongoose';
 import app from './app';
 import config from './config';
-import { seedDB } from './db/mongo/seed';
 import http from 'http';
 import { Server } from 'socket.io';
 
@@ -32,7 +31,6 @@ server.listen(config.PORT, () => {
     .then(() => {
       console.log('Connected to MongoDB');
     })
-    .then(() => seedDB())
     .catch(error => {
       console.error('Error connecting to MongoDB:', error);
     });

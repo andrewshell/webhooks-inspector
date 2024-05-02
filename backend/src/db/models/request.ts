@@ -1,28 +1,36 @@
-import { Schema, model, Types } from 'mongoose';
-
-interface IRequest {
-  _id: Types.ObjectId;
-  bin_id: string;
-  request_id: string;
-  data: any;
-}
-
+import { Schema, model, Document } from 'mongoose';
+import { IRequest } from './interfaces';
 
 const RequestSchema = new Schema<IRequest>({
-  bin_id: {
-    type: String,
-    required: true,
+  bin: {
+    type: Schema.Types.ObjectId,
+    ref: 'Bin',
+    required: true
   },
   request_id: {
     type: String,
-    required: true,
+    required: true
+  },
+  headers: {
+    accept: String,
+    content_length: String,
+    content_type: String,
+    host: String,
+    user_agent: String
+  },
+  method: {
+    type: String
+  },
+  path: {
+    type: String
   },
   data: {
     type: Object,
     required: true
   },
+}, {
+  timestamps: true
 });
-
 
 RequestSchema.set('toJSON', {
   transform: (_document, returnedObject) => {
@@ -32,6 +40,4 @@ RequestSchema.set('toJSON', {
   },
 });
 
-const RequestModel = model('Request', RequestSchema);
-
-export { IRequest, RequestModel };
+export const RequestModel = model<IRequest>('Request', RequestSchema);

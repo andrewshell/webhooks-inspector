@@ -1,37 +1,29 @@
-/* eslint-disable @typescript-eslint/no-unsed-vars */
 import { Request } from 'express';
-import { pgPool } from '../db/pg/pg_pool';
 import { v4 as uuidv4 } from 'uuid';
+import { BinModel } from '../db/models/bin';
 import { RequestModel } from '../db/models/request';
 
-const addRequestPG = async (binId: string, req: Request) => {
+export async function addRequest(binId: string, req: Request) {
   const requestId = uuidv4();
 
-  const query1 = 'SELECT * FROM bins WHERE bin_id = $1';
+  const bin = await BinModel.findOne({ bin_id: binId });
 
-  const { rows } = await pgPool.query(query1, [binId]);
+  if (!bin) {
+    throw new Error('Bin not found');
+  }
 
-  const { id: binIdFK } = rows[0];
-
-  const query2 = 'INSERT INTO requests (bin_id_fk, request_id, header_accept, header_content_length, header_content_type, header_host, header_user_agent, method, path) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)';
-
-  const accept        = req.get('Accept');
-  const contentLength = req.get('Content-Length');
-  const contentType   = req.get('Content-Type');
-  const host          = req.get('Host');
-  const userAgent     = req.get('User-Agent');
-  const method        = req.method;
-  const path          = req.path;
-
-  pgPool.query(query2, [binIdFK, requestId, accept, contentLength, contentType, host, userAgent, method, path]);
-
-  return { requestId };
-};
-
-const addRequestMongo = async (binId: string, req: Request, requestId: string) => {
   const newRequest = new RequestModel({
-    bin_id: binId,
+    bin: bin._id, // Reference to the Bin document
     request_id: requestId,
+    headers: {
+      accept: req.get('Accept'),
+      content_length: req.get('Content-Length'),
+      content_type: req.get('Content-Type'),
+      host: req.get('Host'),
+      user_agent: req.get('User-Agent')
+    },
+    method: req.method,
+    path: req.path,
     data: {
       headers: req.headers,
       body: req.body,
@@ -39,36 +31,10 @@ const addRequestMongo = async (binId: string, req: Request, requestId: string) =
   });
 
   await newRequest.save();
+
+  return { request: newRequest };
 }
 
-const getRequest = async (requestId: string) => {
-  const query = 'SELECT * FROM requests WHERE request_id = $1';
-  const { rows } = await pgPool.query(query, [requestId]);
-  const rawRequestData = rows[0];
-  const { id, bin_id_fk, ...requestData } = rawRequestData;
-  const requestMongo = await RequestModel.findOne({ request_id: requestId });
-  requestData.data = requestMongo?.data;
-
-  return requestData;
+export function clearRequests() {
+  return RequestModel.deleteMany({});
 }
-
-const addRequest = async (binId: string, req: Request) => {
-  const { requestId } = await addRequestPG(binId, req);
-  
-  await addRequestMongo(binId, req, requestId);
-  
-  const request = await getRequest(requestId);
-  
-  return { request };
-};
-
-const clearRequests = async () => {
-  const query = 'DELETE FROM requests';
-
-  await pgPool.query(query);
-  await RequestModel.deleteMany({});
-  
-  console.log('requests cleared');
-};
-
-export default { addRequest, clearRequests };

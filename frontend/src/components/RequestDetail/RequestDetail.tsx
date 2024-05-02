@@ -22,7 +22,7 @@ function RequestDetail({ binId, request }: RequestDetailProps) {
           <span className="ml-2">{formatPath(binId, request.path)}</span>
         </h2>
         <span className="text-sm text-neutral-500">
-          {formatDate(request.created_at)}
+          {formatDate(request.createdAt)}
         </span>
       </div>
       <div className={`border-b px-6 pt-6 pb-8 ${borderColors[request.method]}`}>

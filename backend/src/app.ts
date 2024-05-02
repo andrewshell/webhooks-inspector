@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express';
-import binsService from './services/bins';
-import requestsService from './services/requests';
+import * as binsService from './services/bins';
+import * as requestsService from './services/requests';
 import cors from 'cors';
 require('express-async-errors')
 

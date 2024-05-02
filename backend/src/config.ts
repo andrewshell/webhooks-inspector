@@ -1,15 +1,6 @@
-import * as dotenv from 'dotenv';
-
-dotenv.config();
-
-const { PORT, MONGO_URL, DB_USER, DB_HOST, DB_PASS, DB_NAME, DB_PORT } = process.env;
+import 'dotenv/config'
 
 export default {
-  PORT,
-  MONGO_URL,
-  DB_USER,
-  DB_HOST,
-  DB_PASS,
-  DB_NAME,
-  DB_PORT,
+  PORT: process.env.PORT ?? 3001,
+  MONGO_URL: process.env.MONGO_URL ?? 'mongodb://localhost:27017/webhooks',
 };

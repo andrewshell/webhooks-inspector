@@ -31,7 +31,7 @@ function RequestItem({ displayPath, request, active, setActiveRequestId}: Reques
           <span className="ml-1 text-sm text-neutral-700">{displayPath}</span>
         </p>
         <p className="mt-1 text-xs text-neutral-400">
-          {formatDate(request.created_at)}
+          {formatDate(request.createdAt)}
         </p>
       </button>
     </li>

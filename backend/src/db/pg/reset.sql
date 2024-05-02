@@ -1,2 +1,0 @@
-DROP DATABASE IF EXISTS webhooks;
-CREATE DATABASE webhooks;
