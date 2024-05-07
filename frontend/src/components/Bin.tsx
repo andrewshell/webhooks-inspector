@@ -68,7 +68,7 @@ function Bin() {
         bin && <BinMetadata binId={binId} binName={bin.name} />
       }
       <div className='mt-8 grid grid-cols-12 gap-4 animate-in fade-in slide-in-from-bottom-1 duration-700 sm:gap-10'>
-        <div className='col-span-4 mt-2'>
+        <div className='col-span-4 mt-2 overflow-auto h-screen'>
           {
             bin && (
               <RequestList
