@@ -34,6 +34,7 @@ function LandingPage() {
     }
 
     const binData: BinType = await binService.getBin(binIdInput);
+    localStorage.setItem('local_bins', JSON.stringify([...myBins, binData]));
 
     if (!binData) {
       setRetrieveBinError(`Bin ${binIdInput} does not exist`);
